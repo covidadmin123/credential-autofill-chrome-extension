@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Colon‑Link Login Autofiller Pro",
+  "version": "2.0.0",
+  "description": "Auto‑fills login forms via colon‑style links. Click links like `https://example.com/path:username:password` to open an armed tab that fills credentials. Hold Alt while clicking to enable two‑step mode for sites that ask for the username/email first. A popup lets you validate and batch open links.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "contextMenus",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

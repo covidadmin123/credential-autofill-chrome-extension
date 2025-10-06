@@ -129,25 +129,6 @@
     return false;
   }
 
-  // Attach submit listeners to all forms on the page. When the user submits the form manually,
-  // this will disarm the credentials so the extension stops scanning. We use a property on
-  // the form to ensure we only attach once.
-  function attachSubmitListeners() {
-    try {
-      document.querySelectorAll('form').forEach(form => {
-        if (!form.__cllaListener) {
-          form.__cllaListener = true;
-          form.addEventListener('submit', () => {
-            // Disarm when the user submits the form manually
-            state.armed = false;
-            safeSend({ type: 'clearCreds' });
-            console.log('[CS] form submitted; disarming');
-          }, { once: true });
-        }
-      });
-    } catch {}
-  }
-
   // Fill username and password if present on the page, optionally auto-submit.
   function fillBoth(u,p){
     let anyFilled = false;
@@ -166,8 +147,6 @@
           anyFilled = true;
         }
         if (changed && passBest){
-          // Register submit listeners so that manual submission clears the armed state.
-          attachSubmitListeners();
           const submit = findSubmitNear(passBest || userBest);
           if (submit && canAutoSubmit()) {
             submit.click();
@@ -187,8 +166,6 @@
         const {userBest, passBest} = findBestInputs(root);
         if (userBest && !passBest && u){
           setVal(userBest, u);
-          // Register submit listeners so that manual submission clears the armed state.
-          attachSubmitListeners();
           const submit = findSubmitNear(userBest);
           if (submit && canAutoSubmit()) {
             submit.click();
@@ -208,8 +185,6 @@
         const { passBest } = findBestInputs(root);
         if (passBest && p){
           setVal(passBest, p);
-          // Register submit listeners so that manual submission clears the armed state.
-          attachSubmitListeners();
           const submit = findSubmitNear(passBest);
           if (submit && canAutoSubmit()) {
             submit.click();
